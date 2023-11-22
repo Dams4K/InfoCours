@@ -1,10 +1,41 @@
 # Récursivité
 
+Déf: on dit qu'un problème de A se réduit à un pb B lorsque résoudre B suffit pour résoudre A
+
+> [!NOTE]
+> **Exemple**<br>
+>
+> A: Entrées: (x, y) ∈ (**N\***)<sup>2</sup><br>
+> $\hspace{8pt}$ Tâche: calculer pgcd(x, y)
+>
+> B: Entrées: (x, y) ∈ (**N\***)<sup>2</sup><br>
+> $\hspace{8pt}$ Tâche: calculer ppcm(x, y)
+>
+> En utilisant `ggcd(x, y) * ppcm(x, y) = xy` On peut réduire A à B: `pgcd(x, y) = xy / ppcm(x, y)`
+
+> [!CAUTION]
+> \- On note A ≼ B si A se réduit à B<br>
+> \- Si A ≼ B, pour résoudre A on a **pas** besoin de connaitre le fonctionnement d'une fonction qui résout B : il suffit d'en avoir une, et de l'utiliser comme une boite noire
+
+L'idée de la récursion est de déduire A à lui-même, càd résoudre des instances de A à l'aide d'autres instances de A.
+
+> [!NOTE]
+> **Exemple**<br>1
+> `u`<sub>`n`</sub>` = u`<sub>`n-1`</sub>` + 1 si n > 0` $\hspace{25pt}$ `0 sinon`
+>
+> Alors *"Calculer u<sub>n</sub>"* reviens à *"Calculer u<sub>n-1</sub>"*
+
+> [!CAUTION]
+> \- En C une fonction peut s'appeler elle-même<br>
+> \- En OCaml il faut le mot-clef `rec`
+
+## Exemples introdutifs
+
 ### 1. La factorielle
 
 On déf sur **N**: `n! = n(n-1)! si n > 0` $\hspace{25pt}$ `1 sinon`
 
-C'est une déf réc! On réduit "calculer `n!`" à "calculer `(n-1)!`"
+C'est une déf réc! On réduit "calculer `n!`" à "calculer `(n-1)!`", sauf si `n = 0` auquel cas `n` renvoie `1`
 
 ### 2. Triangle
 
@@ -33,7 +64,7 @@ Cela donne le pseudo-code donné en annexe
 ### 4. Exponentiation rapide
 
 #### Probleme:
-Entrée: a € **Z**<sup>*</sup>, n € **N**
+Entrée: a ∈ **Z**<sup>*</sup>, n ∈ **N**
 Tâche: calculer a<sup>n</sup>
 
 Idée: `a`<sup>`n`</sup> `=` `a`<sup>`n/2`</sup> `+` `a`<sup>`n/2`</sup>
@@ -44,7 +75,7 @@ On va distinguer le cas pair et impair:
 
 et `a`<sup>`0`</sup>` = 1`
 
-1^ière idée pour coder cela:
+1<sup>ière</sup> idée pour coder cela:
 ```ocaml
 let rec exprap = fun a m -> if n = 0
     then 1 
@@ -56,7 +87,7 @@ let rec exprap = fun a m -> if n = 0
 
 Ce code termine, est correct mais a un défaut: il calcule deux fois `(exprap a m)`: c'est du gaspillage. On voudrait le calculer une seule fois.
 
-Vraie `exprap`: cf annexe "exponentiation rapide récursive" On obtient ainsi une complexité en **TETA**( log<sub>2</sub>(n) )
+Vraie `exprap`: cf annexe "exponentiation rapide récursive" On obtient ainsi une complexité en Ɵ( log<sub>2</sub>(n) )
 
 ### 5. Boucles
 

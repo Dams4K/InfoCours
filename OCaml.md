@@ -30,7 +30,7 @@ let <id> = <expr>
 On ne précise pas le type: le compilateur l'infère !
 
 ### 1. Expression
----
+
 
 En OCaml "tout est expression" (sauf les phrases) càd que sont des expressions:
 - entiers, flottants et leurs opérations
@@ -52,7 +52,7 @@ En OCaml "tout est expression" (sauf les phrases) càd que sont des expressions:
 > \- Une expression est implicitement parenthésée à gauche d'abord
 
 ### 2. Conditionnelles
----
+
 
 Un if / then / else est une exp: `if <bool> then <expr0> else <expr1>`
 
@@ -63,7 +63,7 @@ La valeur du if / then / else sera soit celle de `expr0` soit `expr1` (selon la 
 On peut omettre le `else`. Cela équivaut à `else ()` càd `sinon rien`. Donc `expr0` doit être le type `unit`
 
 ### 3. Déclaration locale
----
+
 
 Pour rendre le code plus lisible, on peut créer des variables locales avec l'expr 
 ```ocaml
@@ -91,7 +91,7 @@ fun <x0> <x1> <x2> ... -> <expr>
 Si `arg`<sub>`0`</sub> `arg`<sub>`1`</sub> `arg`<sub>`2`</sub> `... arg`<sub>`k-1`</sub> sont de type `T`<sub>`0`</sub> `T`<sub>`1`</sub> `T`<sub>`2`</sub> `... T`<sub>`k-1`</sub> et que expr est de type `T`<sub>`e`</sub>, alors cette fonction est de type `T`<sub>`0`</sub> `-> T`<sub>`1`</sub> `-> T`<sub>`s`</sub> `-> ... -> T`<sub>`k-1`</sub> `-> T`<sub>`e`</sub>
 
 ### 1. Curryfication
----
+
 
 *(Interlude maths)*
 
@@ -134,7 +134,7 @@ En Ocaml, toutes les fonctions sont curryfiées. Càd:
     Les types sont implicitement parenthésés de droite à gauche
 
 ### 2. Ordre supérieur
----
+
 
 Une fonction d'ordre supérieur est une fonction qui prend en argument une fonction
 
