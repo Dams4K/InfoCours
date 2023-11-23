@@ -33,22 +33,22 @@ L'idée de la récursion est de déduire A à lui-même, càd résoudre des inst
 
 ### 1. La factorielle
 
-On déf sur **N**: `n! = n(n-1)! si n > 0` $\hspace{25pt}$ `1 sinon`
+On déf sur **N**: $\begin{cases} n! = n(n-1)! & \quad \text{si } n > 0 \\ 1 & \quad \text{sinon} \end{cases}$
 
-C'est une déf réc! On réduit "calculer `n!`" à "calculer `(n-1)!`", sauf si `n = 0` auquel cas `n` renvoie `1`
+C'est une déf réc! On réduit "calculer $n!$" à "calculer $(n-1)!$", sauf si $n = 0$ auquel cas $n$ renvoie $1$
 
 ### 2. Triangle
 
-Entrée: `n` un entier<br>
-Tâche: Dessiner un triangle de `n` lignes d'étoiles
+Entrée: $n$ un entier<br>
+Tâche: Dessiner un triangle de $n$ lignes d'étoiles
 
 Une méthode rec est :
-- écrire une ligne de `n` étoiles
-- puis si `n > 1`, recursivement tracer un triangle de `n-1` lignes en dessous
+- écrire une ligne de $n$ étoiles
+- puis si $n > 1$, recursivement tracer un triangle de $n-1$ lignes en dessous
 
 ### 3. Tours de Hanoï
 
-Pour résoundre le problème on réduit le problème de déplacer `n` disques d'un emplacement à un autre à celui de déplacer `n-1` disques. Cette réduction n'a pas de sens si `n = 0`: c'est le cas de base qu'il faut gérer à part.
+Pour résoundre le problème on réduit le problème de déplacer $n$ disques d'un emplacement à un autre à celui de déplacer $n-1$ disques. Cette réduction n'a pas de sens si $n = 0$: c'est le cas de base qu'il faut gérer à part.
 
 Cela donne le pseudo-code donné en annexe
 
@@ -67,13 +67,13 @@ Cela donne le pseudo-code donné en annexe
 Entrée: a ∈ **Z**<sup>*</sup>, n ∈ **N**
 Tâche: calculer a<sup>n</sup>
 
-Idée: `a`<sup>`n`</sup> `=` `a`<sup>`n/2`</sup> `+` `a`<sup>`n/2`</sup>
+Idée: $a^n = a^{n/2} + a^{n/2}$
 
 On va distinguer le cas pair et impair:
-- `a`<sup>`2m`</sup>` = a`<sup>`2`</sup> `*` `a`<sup>`m`</sup>
-- `a`<sup>`2m+1`</sup>` = a`<sup>`2`</sup> `*` `a`<sup>`m`</sup>` * a`
+- $a^{2m} = a^2 * a^m$
+- $a^{2m+1} = a^2 * a^m * a$
 
-et `a`<sup>`0`</sup>` = 1`
+et $a^0 = 1$
 
 1<sup>ière</sup> idée pour coder cela:
 ```ocaml
