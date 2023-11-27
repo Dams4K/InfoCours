@@ -103,3 +103,71 @@ La récursivité permet de remplacer les boucles !
 > }
 > return f;
 > ```
+
+## II - Concevoir un algo réc
+
+Methode: il s'agit de trouver une réduction du problème à lui-même. <br>
+Pour cela:
+1. on suppose (soit) que l'on a un ami très intelligent qui peut résoudre les autres instances du prblm
+1. on cherche un lien entre notre instance et d'autres instances 
+1. on en déduit une méthode récursive qui utilise cette réduction
+1. on cherche quand est-ce que cette réduction n'a pas de sens: ce sont les cas de base qu'il faut traiter à part: on détermine précisement ce qu'il faut alors faire
+
+## III - Terminaison et Correction
+
+C'est plus simple qu'en impératif car:
+- il n'y a pas de boucles (ou peu)
+- les variables sont immuables
+
+### 1. Correction
+
+C'est facile pour les fonctions non-rec (correc de fonction sans boucle)
+
+Pour les fonctions récursives, on montre par réc sur leur(s) argument(s) qui varient que la spec est bien vérifiée
+
+> [!NOTE]
+> **Exemple**<br>
+> Montrons que **1. Factorielle** est correcte<br>
+> Elle doit renvoyer $n!$ pour tout $n \geq 0$<br>
+> Montrons-la correcte par réc sur $n \geq 0$:
+>
+> **Initialisation :** si $n = 0$<br>
+> fact 0 s'évalue à 1 d'après I-T-E (if then else) or $1 = 0!$ d'où l'initialisation
+>
+> **Hérédité :**<br>
+> Supp fact correcte pour un certain $n \in \mathbb{N}$, montrons la correcte pour $n+1$<br>
+> D'après le ITE, fact(n+1) vaut (n+1)*fact(n)<br>
+> Or par H.R, fact(n) = n! Donc fact(n+1) = (n+1)! D'où l'hérédité
+
+### 2. Terminaison
+
+Il faut mq la suite d'appels réc termine. On procède comme pour les boucles, sauf que le variant varie d'un appel à l'autre
+
+> [!NOTE]
+> **Exemple**<br>
+> n est un variant de fact car:
+> - entier minorée par 0 (fact renvoie alors 1)
+> str décroissant d'un appel au suivant puisque l'appel suivant est fait sur $n-1$ qui est < n
+
+## IV - Compléxité
+
+Il est important de distinguer:
+- coût "local à l'appel en cours"
+- coût des appels récursifs
+
+### 1. Methode 1: équation
+
+> [!NOTE]
+> **Exemple**<br>
+> Notons M(n) le nb de multiplications de fact n.<br>
+> M vérifie:
+> - M(0) = 0 et pour $n \geq 1$, M(n) = 1 + M(n-1)
+>
+> On résout et obtient M(n) = n
+
+Généralement on a plutôt un $\theta$ : M(n) = $\theta$(1) + M(n-1)<br>
+On remplace alors le $\theta$ par la cst qu'il cache et on résout M(n) = K + M(n-1). On obtient M(n) = $\theta$(n)
+
+> [!CAUTION]
+> **Rmq**<br>
+> Généralement le cas de base est de compléxité $\theta$(1) et on l'omet
