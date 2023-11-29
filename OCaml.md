@@ -236,8 +236,8 @@ En OCaml, on peut déclarer un type `t` via la phrase `type y = ...`
 > Le filtrage permet de faire une disjonction de cas sur la forme de la valeur d'une expression. Il s'écrit :
 > ```ocaml
 > match expr with
->   motif0 -> e0
->   motif1 -> e1
+>   | motif0 -> e0
+>   | motif1 -> e1
 >   ...
 > ```
 > où `motif0`, `motif1`, ..., sont des formes possibles pour la valeur de `expr`; et `e0`, `e1`, ..., sont les expr à évaluer dans ces cas

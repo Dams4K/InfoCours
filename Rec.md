@@ -171,3 +171,96 @@ On remplace alors le $\theta$ par la cst qu'il cache et on résout M(n) = K + M(
 > [!CAUTION]
 > **Rmq**<br>
 > Généralement le cas de base est de compléxité $\theta$(1) et on l'omet
+
+### 2. Arbre d'appels
+
+> [!TIP]
+> **Déf**<br>
+> On peut représenter visuellement, sous la forme d'un arbre, une suite d'appels réc et leurs coûts:
+> - On fait des noeuds pour les 1ers et derniers appels ainsi que, au milieu, pour des appels qcq
+> - On indice chaque noeud par les arg de la fonction
+> - dans chaque noeud on indique le coût local
+
+Méthode pour calculer la complexité:
+- tracer l'arbre
+- évaluer le coùut d'1 lign qcq de l'arbre
+- sommer ce coût sur les lignes
+
+> [!NOTE]
+> **Exemple**<br>
+> Pour fact n, il y a 1 noeud par ligne, de coût k<br>
+> Il y a n+1 lgn, donc le coût total est $$\sum_{i=0}^{n} k = \theta(n)$$
+
+
+<br>
+
+---
+### TD
+
+et ça sert d'exemple de code OCaml
+
+```ocaml
+let rec badexp = fun a n ->
+    if n = 0
+        then 1
+    else
+        if n mod 2 = 0 then
+            (badexp a (n/2)) * (badexp a (n/2))
+        else
+            (badexp a (n/2)) * (badexp a (n/2)) * a
+```
+
+Calculer M(n) le nb de mult de `badexp a n`
+
+NB: On pourra supposer n tjrs pair dans la suite d'appels, càd $n = 2^p$
+
+On a $M(2^p) = \begin{cases} 1 + 2M(2^{p-1}) \\ 2 & \text{si p = 0}\end{cases}$
+
+Posons $v_p = M(2^p) - l$<br>
+$v_{p+1} = M(2^{p+1}) + 1 - l$<br>
+$v_{p+1} = 2M(2^p) - l - l$<br>
+$v_{p+1} = 2M((2^p) - l)$<br>
+$v_{p+1} = 2M((2^p) - l)$<br>
+$v_{p+1} = v_p$<br>
+
+$v_0 = M(2^0)+1 = 3$
+
+$v_p=3*2^p \quad\quad\quad\quad\quad\quad M(2^p) = v_p + l = 3 * 2^p + l = 3 * 2^p - 1$
+
+
+```
+                    O
+                   / \
+                  /   \
+                 /     \
+                /       \
+               /         \
+              /           \
+             /             \
+            /               \
+           /                 \
+          O                   O
+         /\                   /\
+        /  \                 /  \
+       /    \               /    \
+      /      \             /      \
+     /        \           /        \
+    O          O         O          O
+    /\        /\         /\        /\
+   /  \      /  \       /  \      /  \    
+  /    \    /    \     /    \    /    \
+ O      O  O      O   O      O  O      O
+ /\    /\  /\    /\   /\    /\  /\    /\
+O  O  O  OO  O  O  O O  O  O  OO  O  O  O
+```
+
+avec $n = 2^p$:
+- sur la ligne de $n/2^i$ avec $i < p$, les coùuts sont de 1 sur la lgn $n/2^p$, les coùuts sont de 2
+- il y a $2^i$ noeuds sur la lgn $n/2^i$
+- les lgn (de coût non-nul) sont $n, n/2, n/4, ..., n/2^i, ..., n/2^p = 1$
+- on somme: $$M(n) = 2^p*2 + \sum_{i=0}^{p-1}1*2^i$$ où $2^i$ le nombre de noeuds et $1$ le coût d'un noeud
+$$M(n) = 2*2^p + 2^p -1 = 3*2^p -1$$
+
+On envoie succ à leur place la plus grande, 2nd plus grd, etc. Amener une crêpe à sa place coûte au plus 2 retournements (1 si elle était au sommet, 0 si elle était déjà à sa place) D'où O(n) retournement.
+
+---
