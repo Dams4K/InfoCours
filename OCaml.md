@@ -276,7 +276,7 @@ En OCaml, on peut déclarer un type `t` via la phrase `type y = ...`
 
 > [!CAUTION]
 > **Attention**
-> - Les majuscules sont **obligatoires** au début des Val<sub>i</sub>
+> - Les ma<sub>j</sub>uscules sont **obligatoires** au début des Val<sub>i</sub>
 > - Le filtrage est très pratique sur de tels types
 
 > [!TIP]

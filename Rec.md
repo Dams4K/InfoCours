@@ -189,7 +189,7 @@ Méthode pour calculer la complexité:
 > [!NOTE]
 > **Exemple**<br>
 > Pour fact n, il y a 1 noeud par ligne, de coût k<br>
-> Il y a n+1 lgn, donc le coût total est $$\sum_{i=0}^{n} k = \theta(n)$$
+> Il y a n+1 lgn, donc le coût total est $\displaystyle \sum_{i=0}^{n} k = \theta(n)$
 
 
 <br>
@@ -258,7 +258,7 @@ avec $n = 2^p$:
 - sur la ligne de $n/2^i$ avec $i < p$, les coùuts sont de 1 sur la lgn $n/2^p$, les coùuts sont de 2
 - il y a $2^i$ noeuds sur la lgn $n/2^i$
 - les lgn (de coût non-nul) sont $n, n/2, n/4, ..., n/2^i, ..., n/2^p = 1$
-- on somme: $$M(n) = 2^p*2 + \sum_{i=0}^{p-1}1*2^i$$ où $2^i$ le nombre de noeuds et $1$ le coût d'un noeud
+- on somme: $M(n) = 2^p*2 + \displaystyle \sum_{i=0}^{p-1}1*2^i$ où $2^i$ le nombre de noeuds et $1$ le coût d'un noeud
 $$M(n) = 2*2^p + 2^p -1 = 3*2^p -1$$
 
 On envoie succ à leur place la plus grande, 2nd plus grd, etc. Amener une crêpe à sa place coûte au plus 2 retournements (1 si elle était au sommet, 0 si elle était déjà à sa place) D'où O(n) retournement.
