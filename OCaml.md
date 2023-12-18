@@ -294,7 +294,7 @@ En OCaml, on peut déclarer un type `t` via la phrase `type y = ...`
 > `plus_expr` (annexe)
 
 > [!CAUTION]
-> **Remarque**
+> **Rmq**<br>
 > - $\neq$ constructeurs peuvent attendre $\neq$ types
 > - Si Val<sub>i</sub> est un constructeur on l'utilise "comme une fonction"
 

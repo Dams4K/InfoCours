@@ -224,3 +224,95 @@ La VRAM a une zone réservée pour ces variables. Elle est découpé en deux don
 > [!IMPORTANT]
 > **Propiété**<br>
 > La taille totale du Tas évolue durant l'exécution (il s'agrandit "qd" il n'a plus de "trou" assez grand pour une allocation)
+
+
+> [!CAUTION]
+> **Rmq**<br>
+> - Si l'agrandissement de la Pile ou du Tas n'est pas possible (car plus de place), on obtient en C une erreur `Stack Overflow`
+> - La taille maax de la Pile et du Tas sont définis par l'OS. En 1ière approximation, Pile + Tas ≃ "tout l'espace non-utilisé de la RAM"
+> - La Pile mémoire se comporte comme la structure de données Piles; mais le Tas mémoire ne se comporte pas comme la structure données Tas (cf S2). Par contre, le Tas mémoire est parfois géré à l'aide de la structure de données Tas
+> - Dans certains cas, il peut y avoir assez de place dans le Tas pour allouer tt les cases d'un objet lui-même
+
+> [!NOTE]
+> **Exemple**<br>
+> ```
+> [ 1 ] *1* [ 1 ] *1* [ 1 ]
+> ```
+> Ici il y a 2 cases libres, mais on ne peut pas allouer un objet de taille 2 (il n'y a pas 2 cases libres côte à côte pour créer une zone de taille 2)
+
+## III - Retours sur la portée != vie
+
+Aux exemples précédents, ajoutons:
+
+```C
+int* p = (int*) malloc (...); // L'objet *p est accessible
+free(p);
+int x = p[0]; // Ici *p est accessible mais mort...
+```
+
+```C
+int* f(void) {
+    int n = 666;
+    return &n;
+}
+```
+
+Le pointeur renvoyé pointe dans le bloc d'activation de f. Hors, à la fin de f, ce bloc d'activation est supprimé: le pointeur pointe vers un objet mort.
+
+```C
+void g(n) {
+    malloc(n * sizeof (char));
+}
+```
+
+On alloue un objet mais on ne le supprime jamais (et on ne peut pas le faire car on ne connais pas sont adresse) : l'objet ne sera jamais tué et est inaccessible
+
+Ccl: Portée != Durée de vie. Il faut **TOUJOURS** libérer la mémoire que l'on a allouée
+
+## IV - Coûts spatiaux
+
+### 1. Tableaux en C
+
+Un tableau est une variable à durée de vie automatique. Sa taille est `nb_de_case * taille_d'1_case`
+
+Ils vont donc sur la pule (ou dans les données statiques s'il sont globaux)
+Il y a cependant une subtilitée
+
+Quand on passe un tableau à une fonction, on ne le passe pas par valeur (on ne le recopie pas) Le tableau est "affaibli en pointeur" : on passe à la place un pointeur vers le début du tableau. D'om le fait que les cases se comportent comme passage par référence.
+
+Ainsi, passer un tableau en arg à une fonction ne consomme que la taille d'un pointeur en espace
+
+### 2. Fonctions
+
+Pour fonctionner, une fonction a besoin de:
+- (sur le Tas assez d'espace pour ses allocations)
+- sur la Pile, assez d'espace pour son/ses blocs d'activation
+- sur la Pile, assez d'espace pour ses appels de fonction
+
+En particulier, une fonction récursive consomme `nombre_maximal_d'appel_en_cours * espace(sur la pile)_d'un_appel` (-> cf S2)
+
+Donc: la complexité a un coût spacial:
+
+> [!CAUTION]
+> **Rmq**<br>
+> Si le seul appel qu'un fonction récursive fait à elle-même est fait à la toute fin de la fonction (derniere opération) on peut optimiser en remplaçant l'appel en cours par l'appel suivant
+
+> [!NOTE]
+> **Exemple**<br>
+> En Ocaml:
+> ```ocaml
+> let rec sum x n = fun x n ->
+>    f n = 0 then x
+>    else sum (x+n) (n-1)
+> ```
+> Ici, dans le cas récursif, on fait:
+> - calculer x+n
+> - calculer n-1
+> renvoyer sum (x+n) (n-1)
+
+Autrement dit, il ne sert plus a rien de conserver la mémoire de l'appel en cours durant l'appel rec: le compilateur optimise en rempmaçant le bloc d'appel en cours par le bloc suivant. Cette fonction n'a besoin que d'1 bloc d'activation. Cette fonction est compilé comme une boucle:<br>
+
+Pour i de n à 0:<br>
+    x <- x + 1
+
+On parle de récusrivité terminale. Le compil OCaml le fait  
