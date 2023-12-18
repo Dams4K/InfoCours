@@ -168,3 +168,59 @@ Certains id ont besoin que leur portée **inclut** leur déclaration: ils sont r
 > [!CAUTION]
 > **Rmq**<br>
 > les compilateurs modernes simplifient souvent et disent que chaque fonction correspond à un bloc d'activation
+
+### 3. Schéma de la VRAM
+
+La mémoire est une sorte de tableau géant, indicé par des adresses mémoires (un pointeur) Sur GNU/Linux, en C, elle est organisée ainsi:
+
+<img src="./encore_un_dessin.svg">
+
+Légende:
+- Code: là où les instructions de la version compilée du prgm st stockée
+- Données statiques: les variables globales du programme. Le compilateur sait quelle sera leur taille (leur type)
+La VRAM a une zone réservée pour ces variables. Elle est découpé en deux données soit non-init (var globales dont on connait la taille mais pas la valeur), et données stat init (var globales dont on connait la taille et la valeur)
+- Pile: là où les différents blocs d'activation en cours sont stockés. Quand un bloc est crée on l'ajoute en bas de la pile; qd on quitte un bloc on le supprime (il est en bas de la pile, LIFO)
+
+
+> [!IMPORTANT]
+> **Propiété**<br>
+> La taille requise par un bloc d'activation est connue à la compilation. A l'éxecution on peut donc créer un bloc sur la pile qui a **exactement** la taille nécessaire. Il n'y a pas besoin de laisser des trous "au cas où" la pile est remplie contigument (=les un à la suite des autres)
+
+
+> [!IMPORTANT]
+> **Propiété**<br>
+> La taille de la pile évolue durant l'exécution
+
+- Tas: la zone où sont allouées les objets à durée de vie allouée. Qd le programme demande d'allouer un objet d'une taille donnée (`malloc` en C), l'OS réserve un bloc de la bonne taille dans le tas et en donne l'adresse au programme. Il ne sera supprimé que lorsque le programme le demande
+
+
+> [!IMPORTANT]
+> **Propiété**<br>
+> Le tas ne peut pas être rempli contigument (car la taille des objets allouées peut-être dynamique, càd dépend de l'exécution). Généralement, ce n'est même pas le but d'un allocateur.
+
+
+> [!NOTE]
+> **Exemple**<br>
+> x <- Allouer 1 case<br>
+> y <- Allouer 3 cases<br>
+> z <- Allouer 2 cases<br>
+> Désallouer (y)<br>
+> t <- Allouer 1 case<br>
+>
+> Essayer de remplir contugement donnerait:
+>
+> -------------------> adresses
+> ```
+> [ X |    Y    | Z ]
+> ```
+> ```
+> [ X ]         [ Z ]
+> ```
+> ```
+>[X |  T  ]    [ Z ]
+> ```
+
+
+> [!IMPORTANT]
+> **Propiété**<br>
+> La taille totale du Tas évolue durant l'exécution (il s'agrandit "qd" il n'a plus de "trou" assez grand pour une allocation)
