@@ -154,7 +154,7 @@ Schéma:
 
 > [!TIP]
 > **Déf**<br>
-> Une liste linéaire est une suite finie, éventuellement vide, d'éléments repérés par leur rang : l = <l0, l1, ..., lln-1>
+> Une liste linéaire est une suite finie, éventuellement vide, d'éléments repérés par leur rang : l = <l<sub>0</sub>, l<sub>1</sub>, ..., l<sub>n-1</sub>>
 
 
 > [!IMPORTANT]
