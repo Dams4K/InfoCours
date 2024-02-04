@@ -190,3 +190,165 @@ Schéma:
 > idem
 >  inser-ieme: ll entier elme -> rien
 > sjmmr kk entier -> rien
+
+## IV - Piles
+
+Un cas particulier des listes linéaires est ce que l'on nomme des Piles: il s'agit de listes linéaires où l'insertion, la suppression et l'accès sont limités au 1er élément
+
+On les représente généralement verticalement (pas de schéma t'es pas con)
+
+(pas de schéma d'évolution d'une pile t'es pas con nn plus)
+
+
+> [!IMPORTANT]
+> **Propiété**<br>
+> Une Pile a la propriété "Last In, First Out" abrégé LIFO: le premier élément à sortir est le dernier à être entré
+>
+> Plus formellement, si on note: e0, e1,... les états successifs de la pile<br>
+> - in(x) le numéro de l'état obtenu après l'insertion de x
+> - out(x) ----------------- la suppression de x
+>
+> Alors: pour tout x, y : in(x) < in(y) => out(y) < out(x)
+
+
+> [!NOTE]
+> **Exemple** de situations à ppté LIFO<br>
+> - blocs syntaxe (portée, durée de vie auto): le premier bloc à ê fermé est le dernier à ê ouvert
+> - exo que vous pouvez croiser: fonctionnement de la notion polonaise inversé
+> - les appels de fonction:
+>   - La fonction en cours est la dernière à avoir été appelé
+>   - qd on la termine, on revient à la fonction suivant dans la pile -> On parle de la pile d'appels des fonctions, aka la pile mémoire
+>   - vérifier si une expression est bien parenthésée
+
+#### a. Implem par tableau
+
+2 grandes façons:
+- Faire un tableau de capacité max N, mémoriser le nb de cases utilisées, insére/suppr à la fin
+- Idem, mais avec des tab dyna : permet de s'affranchir de la capacité max.
+
+
+> [!CAUTION]
+> **Rmq**<br>
+> Par rapport aux listes linéaire, ici l'élément de "1iere position" est à droite: la pile est rangée de droite à gauche dans le tableau.
+
+#### b. Par listes chainées
+
+RAS, ĉ listes linéaires: cf TP
+
+## V - Files
+
+On peut restreindre les listes linéaires à insérer en 1iere position, accéder et supprimer en dernière position: on parle de Files
+
+
+> [!IMPORTANT]
+> **Propiété**<br>
+> Une file a la ppté "First In First Out" : les éléments sortent de la file dans l'ordre où ils y entrent
+
+
+> [!NOTE]
+> **Exemple** de situations à ppté FIFO<br>
+> - Gestion de file d'attente (serveur web, les de commandes dans un terminal)
+
+#### a. Implem par tableau circulaire
+
+Une première idée est de faire "ĉ les piles"
+
+Prblm: le contenu du tableau se "décalre vers la droite". On finit par arriver à ce type de situation:
+
+[ ? | ... | ? | x | ... | xn ]
+
+Ici pour insérer on devrait agrandir ke tabkeay alors qu'il y a bcp de cases libres
+
+Trois solutions:
+- agrandir qd mm à la "tab dyna" ça marche mais gaspille de la place
+- décaler les cases occupées de la droite vers la gauche: si on ne le fait pas trop souvent, la cplexité amorte est bonne (eg ne le faire que lorsqu'on agrandit le tableau)
+- dire que le tableau est en fait **circulaire**: on fait ĉ si la 1iere case suivait la derniere
+
+
+> [!NOTE]
+> **Exemple**<br>
+> On stocke début de l'indice de la première case, et len le nombre d'éléments
+
+On utilise donc (cf TP)
+- un tableau **contenu**, de longueur C
+- un indice **sortie** qui stocke l'indice de la sortie de la file
+- un nombre d'éléments **len**
+
+Les éléments de la file sont stockés (dans l'ordre de sortie) de `sortie` à `sortie+len-1` inclus (/!\ Circularité):
+
+[x2, x3, ..., x0, x1]<br>
+. . . . . . . . . . ^ sortie
+
+La circularité est prise en compte en calculant les indices modulo C
+
+
+> [!NOTE]
+> **Exemple**<br>
+> 
+> File vide: [ | | | ... | | ]<br>
+> . . . . . . . . . ^ sortie
+> 
+> La position de la sortie importe peu
+> 
+> Enfile:
+> 
+> [x2, x3, ..., x0, x1]<br>
+> . . . . . . . . . . ^ sortie
+>
+> (enfile x4) -> len' = len + 1
+>
+> [x2, x3, x4, ..., x0, x1]<br>
+> . . . . . . . . . . . . . ^ sortie
+>
+> ie on écrit en `(sortie + len) % C` et on incrémente len
+>
+> Défile:
+> 
+> [x2, x3, x4, ..., x1]<br>
+> . . . . . . . . . . . . . ^ `sortie' = sortie + 1 % C`
+>
+> ie on décrément len et incrémente sortie (mod C)
+
+### b. Implem par listes simpl chainéees
+
+Idée: on stocke les valeurs dans une liste simpl chainée. La sortie de la file est la tête de la liste et l'entrée de la file est le fond de la liste
+
+One ne mémorise que 2 ptrs
+- 1 vers la tête
+- 1 vers le fond
+
+ptr sortie -> [ x0 |--> [ x1 |--> [ x3|X] -> ptr entrée
+
+
+> [!NOTE]
+> **Exemple**<br>
+> - File vide: les deux **ptr** pointent sur rien (NULL)
+> - Tester si la file est vide: on teste si les **ptr** sont NULL ou non
+> - Défiler : on fait pointer **ptr** sortie vers l'élem suivant
+> - Enfiler : on crée un nouveau maillon on fait pointer le fond de la liste dessus et on maj ptr entrée
+
+## VI - Variantes des Files
+
+### 1. File de priorité
+
+-> cf S2
+
+Idée: files, mais où les elems sortent par **priorité** et non FIFO
+
+### 2. Files à doubles entrées
+
+Idée: un file, mais où on peut enfiler/défiler des 2 côtés:
+
+-> . . . . . . . . . . -><br>
+ | x0 | x1 | x2 |
+<br><- . . . . . . . . . . <-
+
+Implem:
+- par tableaux circulaires
+- par listes doublement chainées
+
+[X| x0 | <-> | x1 | <-> | x2 |X]
+
+ie chq maillon mémorise le maillon prec et suivant
+
+NB: en python, les files à double entrée sont des deque (Double Ended Queue)
