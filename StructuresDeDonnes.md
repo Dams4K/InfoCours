@@ -249,7 +249,7 @@ On peut restreindre les listes linéaires à insérer en 1iere position, accéde
 > **Exemple** de situations à ppté FIFO<br>
 > - Gestion de file d'attente (serveur web, les de commandes dans un terminal)
 
-#### a. Implem par tableau circulaire
+### a. Implem par tableau circulaire
 
 Une première idée est de faire "ĉ les piles"
 
