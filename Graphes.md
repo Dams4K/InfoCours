@@ -351,3 +351,15 @@ est obtenu avec un parcours Pile et marquage anticipé. L'arête 2 - 3 ne vérif
 ## 5. Parcours du graphe en entier
 
 Rappel: un parcours ne visite que les sommets accessibles depuis $s_0$
+
+Si on veut tous les visiter, on peut procéder par parcours successif:
+
+```
+Pour chq sommet: 
+  s'il n'a pas été marqué lors d'un parcours précédent:
+    Lancer un parcours depuis ce sommet.
+```
+
+Complexité: ss les même hyp que le parcours général, on a:
+
+C(G) = $\Theta$(|S| + |A|) si les listes d'adj = $\Theta$($|S|^2$) si matrices d'adj
