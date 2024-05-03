@@ -363,3 +363,187 @@ Pour chq sommet:
 Complexité: ss les même hyp que le parcours général, on a:
 
 C(G) = $\Theta$(|S| + |A|) si les listes d'adj = $\Theta$($|S|^2$) si matrices d'adj
+
+On peut utiliser ce principe pour calculer les composantes connexes : tous les sommets visités lors d'un même parcours forment exactement une composante connexe, puisque c'est l'ensemble des sommets accessibles depuis le sommet initial de ce parcours.
+
+Pseudo-code: on veut remplir un tableau CC qui stockent le numéros de la CC de chaque sommet.
+
+```
+CC <- tableau à n cases, init à -1
+num <- 0
+
+Pour chq sommet s€S:
+  Si CC[s] = -1:
+    Lancer un parcours depuis s
+    // le traitement d'un sommet u lors de ce parcours est CC[u] <- num
+    num <- num + 1
+  
+  Renvoyer CC
+```
+
+> [!CAUTION]
+> **Rmq**<br>
+> Un tel algorithme qui lance plusieurs parcours pour visiter tous les sommets est appelé un **parcours complet du graphe**.
+
+## 6. Tri topologique
+
+On considère ici des graphes orientés acycliques. On les interprètes comme des dépendances, et on veut traiter les tâches indiquées dans l'ordre:
+
+<img src="./graph_rdm2.png">
+
+Autre ex:
+- construction d'un meuble/avion
+- boot d'un ordinateur
+- éditions de liens lors de la compilation: si le fichier A dépend de B, il faut gérer B avant A
+
+
+> [!CAUTION]
+> **Rmq**<br>
+> - On se limite à des graphes acycliques car un cycle donne des tâches qui dépendent d'elle-même (cf oeuf-poule)
+> - On abrège graphe orienté acycliques en DAG (Directed Acyclic Graph)
+
+
+> [!TIP]
+> **Déf**<br>
+> Soit G=(S, A) un DAG
+>
+> On dit que l'ordre large ≼ sur S est un ordrre topologique ss'il est total et que l'ordre strict associé ≺ vérifie !
+>
+> pour tt (u,v)€A, u ≺ v
+
+
+
+> [!CAUTION]
+> **Rmq**<br>
+> - Un chemin orienté est une suite st croissante pour tout ordre topologique
+> - Si l'on a calculé un ordre topo sur un graphe, il suffit de traiter les tâches par ordre topologique croissant pour avoir un ordre de traitement "qui fonctionne"
+> - Il n'y a pas unicité d'un ordre topologique 
+>
+> <img src="./graph_rdm22.png">
+
+Pour calculer un ordre topo, on va utiliser un **DFS récursif**
+
+On dit que l'on:
+- ouvre un sommet lors de ce parcours au début de son 1er appel
+- ferme un sommet à la fin de son appel, càd après la fin de l'exploration rec de ses voisins.
+
+On explicite souvent une notion de "temps/moment/etc": initialement le temps est t=0, et est incr de 1 à chq ouv/fermeture.
+
+<img src="./graphe12avrl.png">
+
+On fait un DFS rec complet dans l'ordre a, b, ..., f et on note les tps
+
+
+> [!CAUTION]
+> **Rmq**<br>
+> - un sommet est ouvert lors de son 1er appel, càd lorsqu'il est traité pour la 1ière fois, càd lorsqu'il devient Noir.
+>
+> - Si (u,v)€A, on n'a u -> v ni forcément ouverture(u) < ouverture(v)<br>
+> ni forcément ouverture(u) > ouverture(v) (cf ex prec)
+> - On n'a pas non plus (u,v)€A qui impliquerait fermeture(u) <fermeture(v) (idem)
+
+
+> [!IMPORTANT]
+> **Théorème**<br>
+> Soit G=(S, A) un DAG.
+>
+> On considère un DFS rec complet de G et on note fermeture(s) la date de fermeture(s). Or:<br>
+> pour tous u et v € S<br>
+> (u,v)€A => fermeture(u) > fermeture(v)
+>
+> Preuve:
+>
+> soit xy€A<br>
+> Distinguons 2 cas:
+> - Si le DFS rec complet ouvre y avant x<br>Montrons que x n'est pas visité à cause de l'appel récursif de y<br>En effet, si c'était le cas, on aurait y -> voisin de y -> ... -> x comme suite d'appels
+>
+> Donc x serait accessible depuis y
+>
+> DOnc il y aurait un cycle car y -> ... -> x -> y est un ch non-vide de y à y. Abs. Donc l'appel sur y n'entraine pas d'appel sur x, donc l'appel à y se ferme avant que x ne soit ouvert:
+>
+> ouverture(y) < fermeture(y) < ouverture(x)
+>
+> Comme fermeture(x) > ouverture(x), on a fermeture(x) > fermeture(y)
+>
+> Sinon: lors de l'appel de x, y n'est pas ouvert (donc pas Noir/marqué)
+>
+> Donc l'appel de x appelle pour la 1iere fois y et l'ouvre. Donc l'appel de x attend la fin de l'appel de y pour terminer, càd:
+>
+> ouverture(x) < ouveture(y) < fermeture(y) < fermeture(x)
+
+
+Corollaire:
+
+On obtient un tri topologique en posant u ≺ v lorsque fermeture(u) > fermeture(v)
+
+Preuve: thm prec
+
+
+> [!CAUTION]
+> **Rmq**<br>
+> - Pour calculer un tri topo, les dates d'ouvertures sont inutiles et on peut ne pas les calculer.
+> - Complexité: celle d'un parcours donc:
+>   - O(|S| + |A|) si liste adja
+>   - O(|S|^2) si mat adja
+
+
+> [!IMPORTANT]
+> **Propiété**<br>
+> Un graphe orienté qcq admet un ordre topo SSI c'est un DAG
+
+Preuve:
+
+<=] cf coro prec
+
+=>] S'il y a un cycle, il n'y a pas d'ordre top car un cycle s0, ..., sl-1, s0 implique s0 ≺ s1 ≺ ... ≺ sl-1 ≺ s0
+
+Donc s0 ≺ s0: abs
+
+Ex de tri topo sur DAG non-connexe
+
+<img src="./qjdnqzdzjdd.png">
+
+## 7. Détection de cycles orientés
+
+En lançant un DFS récursif complet, on peut détecter un cycle
+
+En effet si un graphe orienté G=(S,A) contient un cycle, alors: on a s0, s1, ..., sl-1, s0 un cycle
+
+Quitte à les renommer, supposons que s0 soit le 1er sommet ouvert de ce cycle. Alors comme il y a un chemin de s0 à sl-1, sl-1 sera ouvert avant que s0 ne se ferme:
+
+ouverture(s0) < ... (= en chemin d'appels rec de s0 à sl-1) < ouverture(sl-1) < fermeture(sl-0) < fermeture(s0)
+
+Donc lors de l'appel sl-1, son voisin s0 est ouvert non-encore fermé
+
+Montrons mtn que réciproquement, si lors d'un DFS rec complet, quand on ouvre en sommet il a un voisin ouvert non-encore fermé, alors il y a un cycle.
+
+Soit v un sommet qui lors de son ouverture lors d'un tel parcours, a un voisin ouvert non-encore fermé:
+
+Puisque u n'est pas encore fermé, sa suite d'appels réc n'est pas terminée
+
+Autrement dit, v est un appel qui provient rec de u
+
+Donc il existe un chemin u -> ... -> v -> u non-vide de u à u, donc un cycle
+
+
+> [!IMPORTANT]
+> **Théorème**<br>
+> Un graphe orienté G=(S,A) est acyclique SSI lors d'un DFS rec complet, qd un sommet est ouvert il n'a aucun voisin ouvert nn encore fermé
+
+Preuve: au dessus
+
+
+> [!CAUTION]
+> **Rmq**<br>
+> - ici, mémoriser ouverture et fermeture est indispensable
+> - complexité celle d'un parcours
+
+
+> [!IMPORTANT]
+> **Théorème**<br>
+> Si G est non-orienté, on peut adapter la méthode préc en :
+>
+> lors d'un DFS complet rec, si lors de l'ouverture d'un sommet u il a un voisin v **qui n'est pas son prédecesseur dans l'ordre induit** et qui est ouvert non-encore fermé, alors le graphe admet un cycle. La réciproque est également vraie.
+
+
+"Preuve": on obtient en chemin sans enchainement x-y-x (grâce à v != pred(u)) de v à v donc il existe un cycle.
