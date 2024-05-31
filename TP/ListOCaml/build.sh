@@ -1,0 +1,1 @@
+ocamlopt -o $1 $1.ml && rm *.cmi *.o *.cmx && ./$1

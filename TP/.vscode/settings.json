@@ -1,0 +1,9 @@
+{
+    "ocaml.sandbox": {
+        "kind": "global"
+    },
+    "files.associations": {
+        "limits": "c",
+        "stdlib.h": "c"
+    }
+}
